@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f7f5f1">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<title>meal.</title>
+<style>
+:root{--bg:#f7f5f1;--paper:#fffefa;--ink:#242522;--gray:#918c84;--line:#e7e2d9;--accent:#c96e50}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Yu Gothic",sans-serif}
+.app{max-width:480px;margin:auto;min-height:100vh;padding:20px 15px 96px}.top{display:flex;justify-content:space-between;align-items:center}.logo{font-size:25px;font-weight:850}.caption{font-size:10px;color:var(--gray)}.more{width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:var(--paper)}
+.switch{display:flex;background:#ebe7df;border-radius:12px;padding:3px;margin:18px 0 13px}.switch button{flex:1;border:0;background:none;padding:8px;border-radius:9px;font-size:10px;color:var(--gray)}.switch .on{background:var(--paper);color:var(--ink);font-weight:800}
+.monthbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.month{font-size:17px;font-weight:800}.arrows{display:flex;gap:5px}.arrow{width:31px;height:31px;border:1px solid var(--line);border-radius:50%;background:var(--paper);font-size:18px}
+.week,.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.week{font-size:9px;color:#aaa59d;text-align:center;margin-bottom:5px}.cell{height:65px;border:1px solid var(--line);background:var(--paper);border-radius:10px;overflow:hidden;position:relative;padding:5px;text-align:left}.empty{border-color:transparent;background:transparent}.num{font-size:9px;color:#9b968f;position:relative;z-index:3}.today{box-shadow:inset 0 0 0 1.5px var(--accent)}.has{padding:0}.has .num{position:absolute;left:5px;top:4px;background:#fffdf9e8;border-radius:5px;padding:1px 4px;color:var(--ink)}.pic{width:100%;height:100%;object-fit:cover}.dot{position:absolute;right:4px;bottom:4px;width:14px;height:14px;background:#fffdf9e8;border-radius:50%;font-size:9px;text-align:center;line-height:14px}
+.card{margin-top:13px;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:14px;display:none}.card.show{display:block}.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}.date{font-size:13px;font-weight:800}.close{font-size:21px;color:var(--gray)}.photoRow{display:grid;grid-template-columns:104px 1fr;gap:11px}.photoBox{width:104px;height:104px;border-radius:13px;overflow:hidden;background:#eee9e0;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:10px}.photoBox img{width:100%;height:100%;object-fit:cover}.fields{display:flex;flex-direction:column;gap:7px}input,textarea{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;padding:9px 10px;font-size:12px;outline:none}textarea{height:62px;resize:none}.meals{display:flex;gap:5px}.meals button{flex:1;border:1px solid var(--line);border-radius:8px;padding:6px;font-size:10px;background:#fff}.meals .selected{background:#eee8df;font-weight:750}.save{width:100%;border:0;border-radius:11px;padding:11px;background:var(--ink);color:#fff;font-weight:750;font-size:12px;margin-top:9px}.delete{display:block;margin:9px auto 0;border:0;background:none;color:#b45a48;font-size:10px}
+.memories{display:none}.memories.show{display:block}.hero{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:15px}.heroTitle{font-size:16px;font-weight:800}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:11px}.stat{background:#f0ece5;border-radius:11px;text-align:center;padding:9px}.stat b{font-size:17px;display:block}.stat span{font-size:8px;color:var(--gray)}.album{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.albumItem{border:1px solid var(--line);border-radius:13px;background:var(--paper);overflow:hidden;text-align:left}.albumItem img{width:100%;height:120px;object-fit:cover}.albumItem p{font-size:10px;font-weight:750;margin:7px 8px 8px}.emptymsg{text-align:center;color:var(--gray);font-size:11px;padding:25px}
+.bottom{position:fixed;left:0;right:0;bottom:0;background:#f7f5f1ee;backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:9px 15px calc(9px + env(safe-area-inset-bottom));z-index:10}.bottomin{max-width:480px;margin:auto;display:flex;gap:7px}.add{flex:1;border:0;border-radius:13px;background:var(--accent);color:white;padding:12px;font-weight:800;font-size:12px}.home{width:45px;border:1px solid var(--line);border-radius:13px;background:var(--paper)}.toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%) translateY(8px);background:#252422;color:white;padding:9px 14px;border-radius:20px;font-size:10px;opacity:0;transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:translateX(-50%)}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div><div class="logo">meal.</div><div class="caption">ごはんを、思い出に。</div></div><button id="more" class="more">⋯</button></div>
+<div class="switch"><button id="calTab" class="on">CALENDAR</button><button id="memTab">MEMORIES</button></div>
+<section id="calendar">
+<div class="monthbar"><div id="month" class="month"></div><div class="arrows"><button id="prev" class="arrow">‹</button><button id="next" class="arrow">›</button></div></div>
+<div class="week"><div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div></div><div id="grid" class="grid"></div>
+<div id="card" class="card"><div class="head"><div id="date" class="date"></div><button id="close" class="close">×</button></div>
+<div class="photoRow"><div id="photoBox" class="photoBox">写真を追加</div><div class="fields"><input id="name" placeholder="料理の名前"><div class="meals"><button data-meal="朝">朝</button><button data-meal="昼">昼</button><button data-meal="夜">夜</button></div><input id="photo" type="file" accept="image/*" style="padding:7px"><textarea id="memory" placeholder="今日の思い出をひとこと"></textarea></div></div>
+<button id="save" class="save">保存する</button><button id="delete" class="delete">この記録を削除</button></div>
+</section>
+<section id="memories" class="memories"><div class="hero"><div id="sumTitle" class="heroTitle"></div><div class="stats"><div class="stat"><b id="days">0</b><span>記録した日</span></div><div class="stat"><b id="photos">0</b><span>写真</span></div><div class="stat"><b id="total">0</b><span>これまで</span></div></div></div><div id="album" class="album"></div></section>
+</div>
+<div class="bottom"><div class="bottomin"><button id="add" class="add">＋ 今日のごはんを記録</button><button id="home" class="home">⌂</button></div></div><div id="toast" class="toast"></div>
+<script>
+const KEY="meal-pwa-data-v1";let data={};try{data=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){data={}}let view=new Date();view.setDate(1);let selected=null,img="",meal="";
+const $=id=>document.getElementById(id),pad=n=>String(n).padStart(2,"0"),key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`,jp=d=>`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+function persist(){localStorage.setItem(KEY,JSON.stringify(data))}
+function render(){let y=view.getFullYear(),m=view.getMonth();$("month").textContent=`${y}年${m+1}月`;let first=new Date(y,m,1).getDay(),last=new Date(y,m+1,0).getDate(),out="";for(let i=0;i<first;i++)out+='<div class="cell empty"></div>';let today=key(new Date());for(let n=1;n<=last;n++){let d=new Date(y,m,n),k=key(d),e=data[k];out+=`<button class="cell ${k===today?"today ":""}${e&&e.photo?"has":""}" data-key="${k}"><span class="num">${n}</span>${e&&e.photo?`<img class="pic" src="${e.photo}">`:""}<span class="dot">${e?"•":"+"}</span></button>`}$("grid").innerHTML=out;document.querySelectorAll(".cell[data-key]").forEach(b=>b.onclick=()=>openEntry(b.dataset.key))}
+function setMeal(){document.querySelectorAll("[data-meal]").forEach(b=>b.classList.toggle("selected",b.dataset.meal===meal))}
+function openEntry(k){selected=k;let e=data[k]||{};img=e.photo||"";meal=e.meal||"";$("date").textContent=jp(new Date(k+"T12:00:00"));$("name").value=e.name||"";$("memory").value=e.memory||"";$("photo").value="";$("photoBox").innerHTML=img?`<img src="${img}">`:"写真を追加";setMeal();$("card").classList.add("show")}
+document.querySelectorAll("[data-meal]").forEach(b=>b.onclick=()=>{meal=b.dataset.meal;setMeal()});
+$("photo").onchange=e=>{let f=e.target.files[0];if(!f)return;if(f.size>8*1024*1024){alert("写真は8MB以下にしてください");return}let r=new FileReader();r.onload=()=>{img=r.result;$("photoBox").innerHTML=`<img src="${img}">`};r.readAsDataURL(f)};
+$("save").onclick=()=>{let e={name:$("name").value.trim(),memory:$("memory").value.trim(),photo:img,meal};if(e.name||e.memory||e.photo)data[selected]=e;else delete data[selected];try{persist()}catch(err){alert("保存容量を超えました。写真を小さくして再度お試しください。");return}render();$("card").classList.remove("show");toast("保存しました")};
+$("delete").onclick=()=>{if(selected&&confirm("この記録を削除しますか？")){delete data[selected];persist();render();$("card").classList.remove("show");toast("削除しました")}};
+$("close").onclick=()=>$("card").classList.remove("show");$("prev").onclick=()=>{view.setMonth(view.getMonth()-1);render()};$("next").onclick=()=>{view.setMonth(view.getMonth()+1);render()};
+function showCal(){$("calendar").style.display="block";$("memories").classList.remove("show");$("calTab").classList.add("on");$("memTab").classList.remove("on")}
+function showMem(){let y=view.getFullYear(),m=view.getMonth(),pre=`${y}-${pad(m+1)}-`,arr=Object.entries(data).filter(([k])=>k.startsWith(pre));$("sumTitle").textContent=`${y}年${m+1}月の思い出`;$("days").textContent=arr.length;$("photos").textContent=arr.filter(x=>x[1].photo).length;$("total").textContent=Object.keys(data).length;let pics=arr.filter(x=>x[1].photo).sort((a,b)=>b[0].localeCompare(a[0]));$("album").innerHTML=pics.length?pics.map(([k,e])=>`<button class="albumItem" data-open="${k}"><img src="${e.photo}"><p>${e.name||"名前のないごはん"}${e.meal?" · "+e.meal:""}</p></button>`).join(""):'<div class="emptymsg">まだ写真の思い出がありません。</div>';document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{showCal();openEntry(b.dataset.open)});$("calendar").style.display="none";$("memories").classList.add("show");$("calTab").classList.remove("on");$("memTab").classList.add("on")}
+$("calTab").onclick=showCal;$("memTab").onclick=showMem;
+function today(){let d=new Date();view=new Date(d.getFullYear(),d.getMonth(),1);showCal();render();openEntry(key(d))}
+$("add").onclick=today;$("home").onclick=today;
+function toast(s){$("toast").textContent=s;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1300)}
+$("more").onclick=()=>{if(confirm("この端末に保存したmeal.の記録をすべて削除しますか？")){data={};persist();render();showMem();showCal();toast("すべて削除しました")}};
+if("serviceWorker" in navigator && location.protocol!=="file:"){navigator.serviceWorker.register("./sw.js").catch(()=>{})}
+render();
+</script>
+</body>
+</html>
